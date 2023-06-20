@@ -1,0 +1,7 @@
+{% for key in ssh_keys %}
+{%- if restrict_transfer_only == True %}
+command="/usr/share/sys-scripts/only-data-allowed-commands.sh",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty {{ key }}
+{%- else %}
+no-X11-forwarding,no-agent-forwarding {{ key }}
+{%- endif %}
+{% endfor %}

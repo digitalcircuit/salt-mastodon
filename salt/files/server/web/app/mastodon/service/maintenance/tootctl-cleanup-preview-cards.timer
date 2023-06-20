@@ -1,0 +1,17 @@
+# Part of tootctl-cleanup-preview-cards.service
+# See https://wiki.archlinux.org/index.php/Systemd/Timers
+[Unit]
+Description=Mastodon - cleanup link preview cards
+Documentation=https://docs.joinmastodon.org/admin/tootctl/#preview_cards-remove
+
+[Timer]
+# Run once a month (midnight)
+# See systemd-analyze calendar monthly
+OnCalendar=monthly
+# Catch up as soon as possible
+Persistent=true
+# Randomize start
+RandomizedDelaySec=1week
+
+[Install]
+WantedBy=timers.target

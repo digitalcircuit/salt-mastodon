@@ -1,0 +1,58 @@
+[Unit]
+Description=Mastodon - cleanup avatars/headers for remote profiles
+Documentation=https://docs.joinmastodon.org/admin/tootctl/#media-remove
+After=network.target
+
+[Service]
+# See https://unix.stackexchange.com/questions/530262/is-systemd-service-unit-option-type-oneshot-appropriate-for-scripts-that-take-a
+# And https://trstringer.com/simple-vs-oneshot-systemd-service/
+Type=oneshot
+User={{ masto_user }}
+WorkingDirectory={{ masto_repo_dir }}
+Environment="RAILS_ENV=production"
+Environment="PATH={{ masto_home_dir }}/.rbenv/shims:{{ masto_home_dir }}/.rbenv/bin:/bin"
+ExecStart={{ masto_repo_dir }}/bin/tootctl media remove --prune-profiles
+#TimeoutSec=15
+Restart=no
+IOSchedulingClass=idle
+CPUSchedulingPolicy=idle
+
+# Below is copied from default Mastodon services
+# Proc filesystem
+ProcSubset=pid
+ProtectProc=invisible
+# Capabilities
+CapabilityBoundingSet=
+# Security
+NoNewPrivileges=true
+# Sandboxing
+ProtectSystem=strict
+PrivateTmp=true
+PrivateDevices=true
+PrivateUsers=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET
+RestrictAddressFamilies=AF_INET6
+RestrictAddressFamilies=AF_NETLINK
+RestrictAddressFamilies=AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+RemoveIPC=true
+PrivateMounts=true
+ProtectClock=true
+# System Call Filtering
+SystemCallArchitectures=native
+SystemCallFilter=~@cpu-emulation @debug @keyring @ipc @mount @obsolete @privileged @setuid
+SystemCallFilter=@chown
+SystemCallFilter=pipe
+SystemCallFilter=pipe2
+ReadWritePaths={{ masto_repo_dir }}
+
+[Install]
+WantedBy=multi-user.target

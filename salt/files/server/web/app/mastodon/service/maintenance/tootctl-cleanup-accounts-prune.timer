@@ -1,0 +1,17 @@
+# Part of tootctl-cleanup-accounts-prune.service
+# See https://wiki.archlinux.org/index.php/Systemd/Timers
+[Unit]
+Description=Mastodon - cleanup remote accounts that haven't been interacted with
+Documentation=https://docs.joinmastodon.org/admin/tootctl/#accounts-prune
+
+[Timer]
+# Run once a week (midnight)
+# See systemd-analyze calendar weekly
+OnCalendar=weekly
+# Catch up as soon as possible
+Persistent=true
+# Randomize start
+RandomizedDelaySec=24hr
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,39 @@
+From 686081234aca7619a30e3745b3f20a2d036164f5 Mon Sep 17 00:00:00 2001
+From: Local Developer <example@localhost>
+Date: Fri, 1 May 2023 00:00:00 -0400
+Subject: [PATCH] Increase character limit for bio
+
+---
+ app/models/account.rb                      | 2 +-
+ app/views/settings/profiles/show.html.haml | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/app/models/account.rb b/app/models/account.rb
+index 28bd828b0..49c8f4162 100644
+--- a/app/models/account.rb
++++ b/app/models/account.rb
+@@ -91,7 +91,7 @@ class Account < ApplicationRecord
+   validates :username, format: { with: /\A[a-z0-9_]+\z/i }, length: { maximum: 30 }, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
+   validates_with UnreservedUsernameValidator, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
+   validates :display_name, length: { maximum: 30 }, if: -> { local? && will_save_change_to_display_name? }
+-  validates :note, note_length: { maximum: 500 }, if: -> { local? && will_save_change_to_note? }
++  validates :note, note_length: { maximum: {{ masto_bio_char_limit }} }, if: -> { local? && will_save_change_to_note? }
+   validates :fields, length: { maximum: 4 }, if: -> { local? && will_save_change_to_fields? }
+ 
+   scope :remote, -> { where.not(domain: nil) }
+diff --git a/app/views/settings/profiles/show.html.haml b/app/views/settings/profiles/show.html.haml
+index 3067b3737..ff1eb2553 100644
+--- a/app/views/settings/profiles/show.html.haml
++++ b/app/views/settings/profiles/show.html.haml
+@@ -10,7 +10,7 @@
+   .fields-row
+     .fields-row__column.fields-group.fields-row__column-6
+       = f.input :display_name, wrapper: :with_label, input_html: { maxlength: 30, data: { default: @account.username } }, hint: false
+-      = f.input :note, wrapper: :with_label, input_html: { maxlength: 500 }, hint: false
++      = f.input :note, wrapper: :with_label, input_html: { maxlength: {{ masto_bio_char_limit }} }, hint: false
+ 
+   .fields-row
+     .fields-row__column.fields-row__column-6
+-- 
+2.34.1
+

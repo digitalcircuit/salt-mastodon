@@ -1,0 +1,17 @@
+# Part of tootctl-cleanup-media-profiles.service
+# See https://wiki.archlinux.org/index.php/Systemd/Timers
+[Unit]
+Description=Mastodon - cleanup avatars/headers for remote profiles
+Documentation=https://docs.joinmastodon.org/admin/tootctl/#media-remove
+
+[Timer]
+# Run once a week (midnight)
+# See systemd-analyze calendar weekly
+OnCalendar=weekly
+# Catch up as soon as possible
+Persistent=true
+# Randomize start
+RandomizedDelaySec=24hr
+
+[Install]
+WantedBy=timers.target

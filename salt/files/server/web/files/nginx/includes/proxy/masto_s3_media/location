@@ -1,0 +1,51 @@
+# Mastodon Media Proxy - Location Config
+# ------------------------
+# Specify the following in the server configuration file within the location block for the Mastodon Media proxy
+	## [Mastodon Media Proxy - Location Config]
+	#include includes/files/proxy/masto_s3_media/location;
+
+# Mastodon Media proxying configuration
+# See https://docs.joinmastodon.org/admin/optional/object-storage-proxy/
+
+keepalive_timeout 30;
+location / {
+	try_files $uri @s3;
+}
+
+set $s3_backend 'https://{{ salt['pillar.get']('server:web:app:mastodon:object_storage:name', 'mastodon_data') }}.{{ salt['pillar.get']('server:web:app:mastodon:object_storage:hostname') }}';
+
+location @s3 {
+	limit_except GET {
+		deny all;
+	}
+
+	#resolver 8.8.8.8;
+	# Nameserver lookup
+	resolver 8.8.8.8 8.8.4.4;
+	proxy_set_header Host {{ salt['pillar.get']('server:web:app:mastodon:object_storage:name', 'mastodon_data') }}.{{ salt['pillar.get']('server:web:app:mastodon:object_storage:hostname') }};
+	proxy_set_header Connection '';
+	proxy_set_header Authorization '';
+	proxy_hide_header Set-Cookie;
+	proxy_hide_header 'Access-Control-Allow-Origin';
+	proxy_hide_header 'Access-Control-Allow-Methods';
+	proxy_hide_header 'Access-Control-Allow-Headers';
+	proxy_hide_header x-amz-id-2;
+	proxy_hide_header x-amz-request-id;
+	proxy_hide_header x-amz-meta-server-side-encryption;
+	proxy_hide_header x-amz-server-side-encryption;
+	proxy_hide_header x-amz-bucket-region;
+	proxy_hide_header x-amzn-requestid;
+	proxy_ignore_headers Set-Cookie;
+	proxy_pass $s3_backend$uri;
+	proxy_intercept_errors off;
+
+	proxy_cache masto_s3_cache;
+	proxy_cache_valid 200 48h;
+	proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
+	proxy_cache_lock on;
+
+	expires 1y;
+	add_header Cache-Control public;
+	add_header 'Access-Control-Allow-Origin' '*';
+	add_header X-Cache-Status $upstream_cache_status;
+}

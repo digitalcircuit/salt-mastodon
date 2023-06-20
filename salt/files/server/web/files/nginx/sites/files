@@ -1,0 +1,69 @@
+# Proxy cache setup
+# See https://thomas-leister.de/en/mastodon-s3-media-storage/
+
+# HTTP
+server {
+	# Listen on default port for non-SSL
+	listen [::]:80;
+	listen 80;
+
+	# Addresses this server should respond to
+	# Put the default name first (for e.g. invalid Host headers)
+	server_name {{ salt['pillar.get']('server:hostnames:cert-primary:files') }};
+
+	# [files Logging Configuration]
+	include includes/files/logging;
+
+	# Redirect to HTTPS
+	# Check for specific hosts, then fall back on $server_name
+	# See https://bjornjohansen.no/redirect-to-https-with-nginx
+	# And https://community.letsencrypt.org/t/security-issue-with-redirects-added-by-certbots-nginx-plugin/5149
+	if ($host = {{ salt['pillar.get']('server:hostnames:cert-primary:files') }}) {
+		return 301 https://$host$request_uri;
+	}
+	# Fallback
+	return 301 https://$server_name$request_uri;
+}
+
+# HTTPS
+server {
+	# Listen on default port for SSL
+	listen [::]:443 ssl http2;
+	listen 443 ssl http2;
+
+	# [files Domain Configuration]
+	include includes/files/domain;
+
+	# Addresses this server should respond to
+	# Put the default name first (for e.g. invalid Host headers)
+	server_name {{ salt['pillar.get']('server:hostnames:cert-primary:files') }};
+
+	root /var/www/files/html;
+	index index.html index.htm index.php;
+
+	# [files Logging Configuration]
+	include includes/files/logging;
+
+	# [Common Configuration]
+	include includes/common/conf_common;
+
+	# [Exclude Indexing Configuration]
+	include includes/common/exclude_indexing;
+
+	# [Deny Configuration]
+	include includes/common/deny_common;
+
+	# [Let's Encrypt Challenge]
+	include includes/common/letsencrypt_challenge;
+
+	# Mastodon files nginx host
+	# See https://docs.joinmastodon.org/admin/optional/object-storage-proxy/
+
+	# Redirect to main server on homepage
+	location = / {
+		return 301 https://{{ salt['pillar.get']('server:hostnames:cert-primary:root') }}/;
+	}
+
+	# [Mastodon Media Proxy - Location Config]
+	include includes/files/proxy/masto_s3_media/location;
+}

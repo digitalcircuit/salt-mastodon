@@ -1,0 +1,15 @@
+# Mastodon Media Proxy - Cache
+# ------------------------
+# Link this file into the server configuration directory, conf.d/
+# sudo ln --symbolic /etc/nginx/includes/files/proxy/masto_s3_media/cache /etc/nginx/conf.d/files-masto_s3_media-cache.conf
+
+# See https://www.nginx.com/blog/nginx-caching-guide/
+# And https://serversforhackers.com/nginx-caching
+
+proxy_cache_path /var/cache/nginx/masto-files levels=1:2 keys_zone=masto_s3_cache:10m max_size=10g inactive=48h use_temp_path=off;
+# Store in /var/cache/nginx/masto-files
+# Use multiple levels
+# Name it 'masto_s3_cache', maximum of 10 MB of keys
+# Limit the size to 10 GB
+# Purge content after 2 days
+# Don't use a temporary path
