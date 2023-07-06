@@ -1,7 +1,7 @@
 # Part of tootctl-cleanup-accounts-prune.service
 # See https://wiki.archlinux.org/index.php/Systemd/Timers
 [Unit]
-Description=Mastodon - cleanup remote accounts that haven't been interacted with
+Description=Mastodon - [weekly] cleanup remote accounts that haven't been interacted with
 Documentation=https://docs.joinmastodon.org/admin/tootctl/#accounts-prune
 
 [Timer]

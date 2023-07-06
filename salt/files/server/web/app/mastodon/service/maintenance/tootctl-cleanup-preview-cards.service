@@ -8,6 +8,7 @@ After=network.target
 # And https://trstringer.com/simple-vs-oneshot-systemd-service/
 Type=oneshot
 User={{ masto_user }}
+SyslogIdentifier=tootctl-cleanup-preview-cards
 WorkingDirectory={{ masto_repo_dir }}
 Environment="RAILS_ENV=production"
 Environment="PATH={{ masto_home_dir }}/.rbenv/shims:{{ masto_home_dir }}/.rbenv/bin:/bin"

@@ -1,7 +1,7 @@
 # Part of tootctl-cleanup-preview-cards.service
 # See https://wiki.archlinux.org/index.php/Systemd/Timers
 [Unit]
-Description=Mastodon - cleanup link preview cards
+Description=Mastodon - [monthly] cleanup link preview cards
 Documentation=https://docs.joinmastodon.org/admin/tootctl/#preview_cards-remove
 
 [Timer]

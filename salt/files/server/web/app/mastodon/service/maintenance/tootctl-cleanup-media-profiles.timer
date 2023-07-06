@@ -1,7 +1,7 @@
 # Part of tootctl-cleanup-media-profiles.service
 # See https://wiki.archlinux.org/index.php/Systemd/Timers
 [Unit]
-Description=Mastodon - cleanup avatars/headers for remote profiles
+Description=Mastodon - [weekly] cleanup avatars/headers for remote profiles
 Documentation=https://docs.joinmastodon.org/admin/tootctl/#media-remove
 
 [Timer]
