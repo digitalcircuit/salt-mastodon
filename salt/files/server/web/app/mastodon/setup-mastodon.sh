@@ -21,7 +21,7 @@ git restore \*
 # Fetch newest code
 git fetch
 # Switch to latest versioned branch
-git checkout $(git tag -l | grep -v 'rc[0-9]*$' | sort -V | tail -n 1)
+git checkout $(git tag -l | grep -v 'rc[0-9]*$' | grep -v 'beta[0-9]*$' | sort -V | tail -n 1)
 
 # Clean up global cache
 # (Must be done manually)
