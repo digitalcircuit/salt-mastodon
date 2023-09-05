@@ -6,15 +6,24 @@ set -euo pipefail
 # https://docs.joinmastodon.org/admin/install/#installing-ruby
 # ----
 echo " * Installing Ruby..."
-RUBY_CONFIGURE_OPTS=--with-jemalloc rbenv install --skip-existing 3.0.6
-rbenv global 3.0.6
+MASTODON_RUBY_VERSION="3.2.2"
+RUBY_CONFIGURE_OPTS=--with-jemalloc rbenv install --skip-existing "$MASTODON_RUBY_VERSION"
+rbenv global "$MASTODON_RUBY_VERSION"
+echo " * Cleaning up old Ruby versions..."
+for RB_VERSION in $(rbenv versions --bare); do
+	if [[ "$RB_VERSION" == "$MASTODON_RUBY_VERSION" ]]; then
+		continue
+	fi
+	rbenv uninstall --force "$RB_VERSION"
+done
+
 echo " * Installing Ruby Bundler..."
 gem install bundler --no-document
 
 # Update Mastodon repository and switch to a stable version
 # https://docs.joinmastodon.org/admin/install/#checking-out-the-code
 # ----
-echo " * Switching to stable Mastodon version..."
+echo " * Switching to tagged Mastodon version..."
 cd "{{ masto_repo_dir }}"
 # Revert custom patches
 git restore \*
@@ -72,13 +81,7 @@ echo " * Using default bio character limits (not changed within Salt configurati
 # https://github.com/mastodon/mastodon/blob/main/lib/tasks/mastodon.rake
 # ----
 echo " * Compiling assets..."
-RAILS_ENV=production bundle exec rails assets:precompile
-
-# Regenerate home feeds
-# https://github.com/mastodon/mastodon/blob/main/lib/tasks/mastodon.rake
-# ----
-echo " * Compiling assets..."
-RAILS_ENV=production bundle exec rails assets:precompile
+RAILS_ENV=production bundle exec rails yarn:install assets:precompile
 
 echo
 echo
@@ -114,3 +117,5 @@ echo
 echo "4.  REGARDLESS OF SETUP, as the system user, enable and (re)start services"
 echo "  (Open new tmux pane, or Ctrl+D until reaching system user)"
 echo "sudo systemctl enable --now mastodon-web mastodon-sidekiq mastodon-streaming"
+echo "  (...or...)"
+echo "sudo systemctl restart mastodon-web mastodon-sidekiq mastodon-streaming"

@@ -396,6 +396,22 @@ server.web.app.mastodon.service.streaming.unit:
 #      # Ensure deployed first
 #      - file: server.web.app.mastodon.config
 
+server.web.app.mastodon.service.streaming-template.unit:
+  file.managed:
+    - name: /etc/systemd/system/mastodon-streaming@.service
+    - source: salt://files/server/web/app/mastodon/service/mastodon-streaming@.service
+    - template: jinja
+    - context:
+        masto_user: "{{ masto_user }}"
+        masto_home_dir: "{{ masto_home_dir }}"
+        masto_repo_dir: "{{ masto_repo_dir }}"
+  cmd.run:
+    - name: systemctl --system daemon-reload
+    - onchanges:
+      - file: server.web.app.mastodon.service.streaming.unit
+#    - require_in:
+#      - service: server.web.app.mastodon.service.streaming
+
 server.web.app.mastodon.service.sidekiq.unit:
   file.managed:
     - name: /etc/systemd/system/mastodon-sidekiq.service
