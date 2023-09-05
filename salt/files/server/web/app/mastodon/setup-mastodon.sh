@@ -81,6 +81,10 @@ echo " * Using default bio character limits (not changed within Salt configurati
 # https://github.com/mastodon/mastodon/blob/main/lib/tasks/mastodon.rake
 # ----
 echo " * Compiling assets..."
+# TODO: Remove "NODE_OPTIONS" once Mastodon fixes the underlying issue
+# See: https://github.com/mastodon/mastodon/issues/19881#issuecomment-1345963360
+export NODE_OPTIONS=--openssl-legacy-provider
+# Compile assets
 RAILS_ENV=production bundle exec rails yarn:install assets:precompile
 
 echo
