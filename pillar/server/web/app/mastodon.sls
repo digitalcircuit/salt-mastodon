@@ -11,6 +11,10 @@ server:
         #  branch: main
         # ----
 
+        # Deploy unstable, not-yet-finished releases of Mastodon?
+        # Be ready for things to break!
+        # Do not set to false if you are currently running a beta/release-candidate.
+        use_unstable_versions: False
         # Configure your domain name (LOCAL_DOMAIN) in "hostnames.sls"
         #
         # System username Mastodon uses
