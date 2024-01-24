@@ -6,7 +6,7 @@ set -euo pipefail
 # https://docs.joinmastodon.org/admin/install/#installing-ruby
 # ----
 echo " * Installing Ruby..."
-MASTODON_RUBY_VERSION="3.2.2"
+MASTODON_RUBY_VERSION="3.2.3"
 RUBY_CONFIGURE_OPTS=--with-jemalloc rbenv install --skip-existing "$MASTODON_RUBY_VERSION"
 rbenv global "$MASTODON_RUBY_VERSION"
 echo " * Cleaning up old Ruby versions..."
