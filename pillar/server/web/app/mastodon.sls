@@ -24,12 +24,16 @@ server:
         # See https://docs.joinmastodon.org/admin/config/#single_user_mode
         single_user_mode: False
         # Secret keys
-        # Make sure to use `rake secret` to generate secrets
+        # Make sure to use `bundle exec rails secret` to generate secrets
         secrets:
           secret_key_base: GENERATE_KEY_AFTER_DEPLOY
           otp_secret: GENERATE_OTP_AFTER_DEPLOY
+          active_record:
+            encryption_deterministic_key: GENERATE_AR_DETER_AFTER_DEPLOY
+            encryption_key_derivation_salt: GENERATE_AR_KEYDERIV_AFTER_DEPLOY
+            encryption_primary_key: GENERATE_AR_PRIMKEY_AFTER_DEPLOY
         # Web push setup
-        # Generate with `rake mastodon:webpush:generate_vapid_key`
+        # Generate with `bundle exec rails mastodon:webpush:generate_vapid_key`
         web_push:
           vapid_private_key: GENERATE_VAPID_PRIVATE_AFTER_DEPLOY
           vapid_public_key: GENERATE_VAPID_PUBLIC_AFTER_DEPLOY

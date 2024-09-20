@@ -2,11 +2,25 @@
 # See http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 
+# Update Mastodon repository and switch to a stable version
+# https://docs.joinmastodon.org/admin/install/#checking-out-the-code
+# ----
+echo " * Switching to tagged Mastodon version..."
+cd "{{ masto_repo_dir }}"
+# Revert custom patches
+git restore \*
+# Fetch newest code
+git fetch
+# Switch to latest versioned branch
+git checkout $(git tag -l |{% if salt['pillar.get']('server:web:app:mastodon:use_unstable_versions', False) == False %} grep '^v[0-9.]*$' |{% endif %} sort -V | tail -n 1)
+
 # Finish installing Ruby
 # https://docs.joinmastodon.org/admin/install/#installing-ruby
+#
+# NOTE: Run this after checking out the repo to have the correct Ruby version
 # ----
 echo " * Installing Ruby..."
-MASTODON_RUBY_VERSION="3.2.3"
+MASTODON_RUBY_VERSION="$(<"{{ masto_repo_dir }}/.ruby-version")"
 RUBY_CONFIGURE_OPTS=--with-jemalloc rbenv install --skip-existing "$MASTODON_RUBY_VERSION"
 rbenv global "$MASTODON_RUBY_VERSION"
 echo " * Cleaning up old Ruby versions..."
@@ -20,24 +34,16 @@ done
 echo " * Installing Ruby Bundler..."
 gem install bundler --no-document
 
-# Update Mastodon repository and switch to a stable version
-# https://docs.joinmastodon.org/admin/install/#checking-out-the-code
-# ----
-echo " * Switching to tagged Mastodon version..."
-cd "{{ masto_repo_dir }}"
-# Revert custom patches
-git restore \*
-# Fetch newest code
-git fetch
-# Switch to latest versioned branch
-git checkout $(git tag -l |{% if salt['pillar.get']('server:web:app:mastodon:use_unstable_versions', False) == False %} grep '^v[0-9.]*$' |{% endif %} sort -V | tail -n 1)
-
 # Clean up global cache
 # (Must be done manually)
 # https://yarnpkg.com/features/offline-cache/
 # ----
 echo " * Cleaning global Yarn cache..."
 yarn cache clean --mirror
+
+# Switch to Yarn 4
+# ----
+corepack prepare
 
 # Install more dependencies (within repository)
 # https://docs.joinmastodon.org/admin/install/#installing-the-last-dependencies
@@ -46,7 +52,7 @@ echo " * Installing additional dependencies..."
 bundle config deployment 'true'
 bundle config without 'development test'
 bundle install -j$(getconf _NPROCESSORS_ONLN)
-yarn install --pure-lockfile
+yarn install --immutable
 
 # Apply character limit if necessary and possible
 # ----

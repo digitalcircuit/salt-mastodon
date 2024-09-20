@@ -1,6 +1,6 @@
-From ea7de25de0c2715222aa08c2c8bd4bd4f239bd9f Mon Sep 17 00:00:00 2001
+From b9d0f3ca665dd3ff02be8613794aa7aef230c0fc Mon Sep 17 00:00:00 2001
 From: Local Developer <example@localhost>
-Date: Tue, 5 Sep 2023 00:00:00 -0000
+Date: Thu, 19 Sep 2024 00:00:00 -0000
 Subject: [PATCH] Increase character limit for bio
 
 ---
@@ -9,20 +9,20 @@ Subject: [PATCH] Increase character limit for bio
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/app/models/account.rb b/app/models/account.rb
-index 244f3da83..447bb99b0 100644
+index a4cab99f7..f228ae97d 100644
 --- a/app/models/account.rb
 +++ b/app/models/account.rb
-@@ -100,7 +100,7 @@ class Account < ApplicationRecord
-   validates :username, format: { with: /\A[a-z0-9_]+\z/i }, length: { maximum: 30 }, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
-   validates_with UnreservedUsernameValidator, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
-   validates :display_name, length: { maximum: 30 }, if: -> { local? && will_save_change_to_display_name? }
--  validates :note, note_length: { maximum: 500 }, if: -> { local? && will_save_change_to_note? }
-+  validates :note, note_length: { maximum: {{ masto_bio_char_limit }} }, if: -> { local? && will_save_change_to_note? }
-   validates :fields, length: { maximum: 4 }, if: -> { local? && will_save_change_to_fields? }
-   validates :uri, absence: true, if: :local?, on: :create
-   validates :inbox_url, absence: true, if: :local?, on: :create
+@@ -74,7 +74,7 @@ class Account < ApplicationRecord
+   USERNAME_ONLY_RE = /\A#{USERNAME_RE}\z/i
+   USERNAME_LENGTH_LIMIT = 30
+   DISPLAY_NAME_LENGTH_LIMIT = 30
+-  NOTE_LENGTH_LIMIT = 500
++  NOTE_LENGTH_LIMIT = {{ masto_bio_char_limit }}
+ 
+   AUTOMATED_ACTOR_TYPES = %w(Application Service).freeze
+ 
 diff --git a/app/views/settings/profiles/show.html.haml b/app/views/settings/profiles/show.html.haml
-index 7c13dc7f4..d452fb763 100644
+index 9790df7d0..dce50a4a8 100644
 --- a/app/views/settings/profiles/show.html.haml
 +++ b/app/views/settings/profiles/show.html.haml
 @@ -18,7 +18,7 @@
