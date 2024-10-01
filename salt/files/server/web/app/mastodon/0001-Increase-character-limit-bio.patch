@@ -21,19 +21,3 @@ index a4cab99f7..f228ae97d 100644
  
    AUTOMATED_ACTOR_TYPES = %w(Application Service).freeze
  
-diff --git a/app/views/settings/profiles/show.html.haml b/app/views/settings/profiles/show.html.haml
-index 9790df7d0..dce50a4a8 100644
---- a/app/views/settings/profiles/show.html.haml
-+++ b/app/views/settings/profiles/show.html.haml
-@@ -18,7 +18,7 @@
-         = f.input :display_name, wrapper: :with_block_label, input_html: { maxlength: 30, data: { default: @account.username } }
- 
-       .fields-group
--        = f.input :note, wrapper: :with_block_label, input_html: { maxlength: 500 }
-+        = f.input :note, wrapper: :with_block_label, input_html: { maxlength: {{ masto_bio_char_limit }} }
- 
-     .fields-row__column.fields-group.fields-row__column-6
-       .input.with_block_label
--- 
-2.34.1
-
