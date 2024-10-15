@@ -76,6 +76,9 @@ server {
 	# [Let's Encrypt Challenge]
 	include includes/common/letsencrypt_challenge;
 
+	# [main Aliases Configuration]
+	include includes/main/well-known-aliases;
+
 	# Mastodon handling
 	keepalive_timeout    70;
 	sendfile             on;

@@ -2,7 +2,7 @@
 # ------------------------
 # Specify the following in the server configuration file within the main server block
 	## [main Domain Configuration]
-	#include includes/main/domain/main;
+	#include includes/main/domain;
 	#
 
 # [SSL Configuration]

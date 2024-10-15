@@ -10,3 +10,4 @@ base:
     - server.system
     - server.web.app.mastodon
     - server.web.certbot
+    - server.web.well-known-aliases

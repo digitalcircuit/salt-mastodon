@@ -1,0 +1,18 @@
+# main Aliases Configuration
+# ------------------------
+# Specify the following in the server configuration file within the main server block
+	## [main Aliases Configuration]
+	#include includes/main/well-known-aliases;
+	#
+
+# Start of configured aliases
+# ----
+{% if salt['pillar.get']('server:web:well-known-aliases:bluesky:did', "") != "" %}
+location /.well-known/atproto-did {
+    add_header Content-Type text/plain;
+    return 200 '{{ salt['pillar.get']('server:web:well-known-aliases:bluesky:did', "") }}';
+}
+{% endif %}
+
+# ----
+# End of configured aliases
