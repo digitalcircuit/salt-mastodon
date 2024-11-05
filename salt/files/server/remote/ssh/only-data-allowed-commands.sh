@@ -28,13 +28,7 @@ case "$SSH_ORIGINAL_COMMAND" in
 		"$CMD_UNISON_ACTUAL" "$CMD_UNISON_ACTUAL_ARGS"
 		;;
 	"$CMD_UNISON_NEWRPC")
-		if [ "$(unison -version)" = "unison version 2.51.5 (ocaml 4.13.1)" ]; then
-			# Fall back to old Unison arguments if needed
-			# Allows Ubuntu 24.04's Unison to talk to Ubuntu 22.04's Unison
-			"$CMD_UNISON_ACTUAL" "$CMD_UNISON_ACTUAL_ARGS"
-		else
-			"$CMD_UNISON_ACTUAL" "$CMD_UNISON_ACTUAL_ARGS_NEWRPC"
-		fi
+		"$CMD_UNISON_ACTUAL" "$CMD_UNISON_ACTUAL_ARGS" __new-rpc-mode
 		;;
 	"$CMD_SFTP_1")
 		"$CMD_SFTP_1"
