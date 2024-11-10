@@ -14,7 +14,6 @@ CMD_UNISON_NEWRPC="unison -server __new-rpc-mode"
 # Always use the full-path version
 CMD_UNISON_ACTUAL="/usr/bin/unison"
 CMD_UNISON_ACTUAL_ARGS="-server"
-CMD_UNISON_ACTUAL_ARGS_NEWRPC="-server __new-rpc-mode"
 
 # SFTP
 CMD_SFTP_1="/usr/lib/sftp-server"
