@@ -1,7 +1,7 @@
 Mastodon via Salt
 =================
 
-This takes a stock Ubuntu 22.04 system and an S3-compatible object storage provider, and with Salt, turns this into a Mastodon federated social media instance, including Let's Encrypt certificates for encrypted connections and optional GPG-encrypted offsite backup.
+This takes a stock Ubuntu 22.04/24.04 system and an S3-compatible object storage provider, and with Salt, turns this into a Mastodon federated social media instance, including Let's Encrypt certificates for encrypted connections and optional GPG-encrypted offsite backup.
 
 Currently, this requires two main deployment steps due to the complications around automating version-dependent Mastodon migrations.
 

@@ -101,7 +101,7 @@ echo
 echo "2.  FOR INITIAL SETUP..."
 echo "  A.  Create configuration file"
 # https://docs.joinmastodon.org/admin/install/#generating-a-configuration
-echo "RAILS_ENV=production bundle exec rake mastodon:setup"
+echo "RAILS_ENV=production bin/rails mastodon:setup"
 echo
 echo "  B.  Copy .env.production generated configuration into Salt YAML"
 echo "  C.  Re-run Salt deployment"

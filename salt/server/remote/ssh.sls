@@ -89,7 +89,7 @@ ssh.data.authorized_keys.{{ ACCOUNT }}.keys:
 
 ssh:
   service.running:
-    - name: sshd
+    - name: ssh
     - enable: True
     ## Reloading is okay
     #- reload_ True

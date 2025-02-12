@@ -12,6 +12,10 @@
 {% set masto_status_char_limit = salt['pillar.get']('server:web:app:mastodon:instance_config:statuses:max_characters', masto_status_char_limit_upstream) %}
 {% set masto_bio_char_limit = salt['pillar.get']('server:web:app:mastodon:instance_config:accounts:max_bio_characters', masto_bio_char_limit_upstream) %}
 
+{% set masto_libvips_minver = '8.13' %}
+{% set masto_libvips_distver = salt['pkg.list_repo_pkgs']('libvips-tools')['libvips-tools'] |first() %}
+{% set masto_libvips_distver_new_enough = (salt['pkg.version_cmp'](masto_libvips_distver, masto_libvips_minver) >= 0) %}
+
 # Require NodeJS and database to be installed first
 include:
   - common.nodejs
@@ -34,6 +38,9 @@ server.web.app.mastodon.dependencies:
       # From https://docs.joinmastodon.org/admin/install/#system-packages
       - imagemagick
       - ffmpeg
+{% if masto_libvips_distver_new_enough == True %}
+      - libvips-tools
+{% endif %}
       - libpq-dev
       - libxml2-dev
       - libxslt1-dev
@@ -54,7 +61,7 @@ server.web.app.mastodon.dependencies:
       #- libreadline6-dev - virtual package, select "libreadline-dev" instead
       - libreadline-dev
       - zlib1g-dev
-      - libncurses5-dev
+      - libncurses-dev
       - libffi-dev
       - libgdbm-dev
       #- nginx
@@ -293,6 +300,8 @@ server.web.app.mastodon.config:
     # Make private
     - mode: 640
     - template: jinja
+    - context:
+        masto_libvips_distver_new_enough: {{ masto_libvips_distver_new_enough }}
     # Set up after repo
     - require:
       - git: server.web.app.mastodon.repo
