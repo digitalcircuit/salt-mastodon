@@ -18,6 +18,7 @@ CMD_UNISON_ACTUAL_ARGS="-server"
 # SFTP
 CMD_SFTP_1="/usr/lib/sftp-server"
 CMD_SFTP_2="/usr/lib/openssh/sftp-server"
+CMD_SFTP_3="/usr/lib/openssh/sftp-server "
 
 case "$SSH_ORIGINAL_COMMAND" in
 	"$CMD_UNISON_1")
@@ -32,7 +33,7 @@ case "$SSH_ORIGINAL_COMMAND" in
 	"$CMD_SFTP_1")
 		"$CMD_SFTP_1"
 		;;
-	"$CMD_SFTP_2")
+	"$CMD_SFTP_2" | "$CMD_SFTP_3" )
 		"$CMD_SFTP_2"
 		;;
 	*)
